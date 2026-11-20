@@ -1,4 +1,10 @@
-container {
+body {
+    font-family: Arial, sans-serif;
+    background-color: lightskyblue;
+    margin: 0;
+    padding: 0;
+}
+.card {
    width: 300px;
     padding: 20px;
     background-color: lightblue;
