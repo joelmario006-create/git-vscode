@@ -1,8 +1,9 @@
-body {
-    background-color: #f0f0f0;
-    color: #0a465a;
-    font-family: Arial, sans-serif;
+card {
+   width: 300px;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid lightgray; 
     margin: 0;
-    padding: 0;
-box-shadow: 0 4px 8px white;
+    box-shadow: 0 4px 8px white;
 }
+
