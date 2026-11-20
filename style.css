@@ -22,3 +22,10 @@ body {
     text-align: center;
 }
 
+.card h1 {
+    font-size: 20px;
+    line-height: 1.4;
+    font-weight: 500;
+    color:#111111;
+}
+
