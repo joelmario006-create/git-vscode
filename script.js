@@ -4,5 +4,11 @@ const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 console.log("Supabase connected:", supabaseClient);
 
-document.getElementById("myButton").addEventListener("click", function() 
-{alert("Button was clicked!");});
+const enterBtn = document.getElementById("enterBtn");
+
+if (enterBtn) {
+    enterBtn.addEventListener("click", async () => {
+        localStorage.setItem("enteredRetu", "true");
+        window.location.href ="feed.html";
+    });
+}
