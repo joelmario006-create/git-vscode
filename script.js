@@ -4,7 +4,7 @@ const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 console.log("Supabase connected:", supabaseClient);
 
-const enterBtn = document.getElementById("enterBtn");
+const enterBtn = document.getElementById("myButton");
 
 if (enterBtn) {
     enterBtn.addEventListener("click", async () => {
