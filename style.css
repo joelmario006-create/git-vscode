@@ -94,5 +94,32 @@ body {
     right: 0px;
     height: 64px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding-left: 24px;
     z-index: 10;
 }
+
+.top-icon-btn {
+    position: relative;
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.top-icon-btn:hover {
+    transform: scale(1.08);
+    opacity: 0.8;
+    
+}
+
+
+
+
