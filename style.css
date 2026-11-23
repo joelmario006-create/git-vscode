@@ -62,7 +62,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100dvh;
-    background-color: #e6f2ff;
+    background-color: #041348;
     overflow: hidden;
 }
 
@@ -70,7 +70,7 @@ body {
     width: 100%;
     max-width: 420px;
     height: 100dvh;
-    background-color: #041348;
+    background-color: #000000;
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
@@ -81,8 +81,8 @@ body {
 }
 
 .scroll-area {
+    position: relative;
     width: 100%;
     height: 100dvh;
     scroll-snap-align: start;
-    background-color: #041348;
 }
