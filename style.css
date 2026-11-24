@@ -41,11 +41,11 @@ body {
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 119, 235, 0.25);
-    transition: transfform 0.15s ease, box-shadow 0.15s ease; background-color 0.2s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
 }
 
 #myButton:hover {
-    transform: translateY(-2px); scale (1.02);
+    transform: translateY(-2px) scale(1.02);
     box-shadow: 0 8px 20px rgba(0, 119, 235, 0.35);
     background-color: #006ce0;
 }
