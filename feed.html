@@ -1,52 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+< lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retu -Feed</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .right-panel {
-            position: fixed;
-            top: 65px;
-            left: calc(50% + 210px);
-            right: 0;
-            padding: 20px  24px;
-            z-index: 50;
-        }
-        .google-pill-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background-color: #ffffff;
-            color: #1f2937;
-            border: none;
-            border-radius: 999px;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-    </style>
+    
+    </head>
+< class="feed-body">
 
+    <header class="right-top-bar"></header>
 
-</head>
-<body class="feed-body">
-
-   <header class="right-top-bar">
-    <button class="top-icon-btn" id="postBtn" title="Create Poster">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" 
-            <circle cx="12" cy="12" r="9.5" stroke="#ffffff" stroke-width="1.8"/>
-            <path d="M12" 8V16M8 12H16 stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
-            
-        </svg>
-    </button>
-</header> 
+    <aside style="position: fixed; top: 80px; left: calc(50% + 230px); z-index: 9999;">
+        <button id="googleSignInBtn" style="display: flex; align-items: center; gap: 10px; background-color: #ffffff; color: #1f2937; border: none; border-radius: 999px; padding: 10px 20px; font-family: Arial, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer;">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/>
+            </svg>
+            <span>Sign in with Google</span>
+        </button>
+    </aside>
 
     <main class="scroll-container">
-    <section class="scroll-area"></section>
-    <section class="scroll area"></section>
-</main>
+        <section class="scroll-area"></section>
+        <section class="scroll-area"></section>
+    </main>
+    
+        
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
             <script src="script.js"></script>
