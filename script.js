@@ -42,6 +42,3 @@ async function checkUser () {
 
 checkUser();
 
-options: {
-    redirectTo: window.location.href
-}
