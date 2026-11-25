@@ -20,25 +20,28 @@ if (googleSignInBtn) {
         const { error } = await supabaseClient.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: window.location.orgin + "/feed.html"
+                redirectTo: window.location.origin + "/git-vscode/feed.html"
             }
-
         });
 
         if (error) {
-            alert ("Sign-in error: " + error.message);
+            alert("Sign-in error: " + error.message);
         }
     });
-
 }
 
-async function checkUser () {
-    const { data: { user } } = await supabaseClient.auth.getUser();
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    const user = session?.user;
+
     if (user && googleSignInBtn) {
         const name = user.user_metadata.full_name || user.email;
+        const avatar = user.user_metadata.avatar_url || "";
         googleSignInBtn.textContent = "Signed in: " + name;
+
+        await supabaseClient.from("profiles").upsert({
+            id: user.id,
+            username: name,
+            avatar_url: avatar
+        });
     }
-}
-
-checkUser();
-
+});
