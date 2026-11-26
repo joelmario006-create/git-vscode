@@ -124,9 +124,12 @@
                 </svg>
             </div>
             <div>
-                <div id="pageDisplayName" class="creator-display-name">Loading...</div>
+                <div id="pageDisplayName" class="creator-display-name"></div>
                 <div id="pageUsername" class="creator-username">@user</div>
                 <div id="pageBio" class="creator-bio"></div>
+                <button id="followCreatorBtn" style="display: none; margin-top: 10px; background-color: #007AFF; color: #ffffff; border: none; border-radius: 999px; padding: 7px 20px; font-size: 13px; font-weight: 700; cursor: pointer;">
+                    Follow
+                </button>
             </div>
         </div>
 
@@ -163,67 +166,108 @@
     <script src="https://jsdelivr.net"></script>
     <script src="script.js"></script>
     <script>
-        async function loadCreatorPage() {
-           const { data: { session } } = await supabaseClient.auth.getSession();
-const user = session?.user;
-            if (!user) {
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            const loggedInUser = session?.user || null;
+
+            // Check if URL has ?id=CREATOR_ID (from tapping a creator on a video)
+            const params = new URLSearchParams(window.location.search);
+            const targetUserId = params.get("id") || loggedInUser?.id;
+
+            if (!targetUserId) {
                 window.location.href = "feed.html";
                 return;
             }
 
-            // 1. Load Profile Info & Colour
+            // 1. Load Target Creator's Profile Info & Colour
             const { data: profile } = await supabaseClient
                 .from("profiles")
                 .select("*")
-                .eq("id", user.id)
-                .single();
+                .eq("id", targetUserId)
+                .maybeSingle();
 
-            const name = profile?.display_name || user.user_metadata.full_name || "Creator";
+            const name = profile?.display_name || "Creator";
             document.getElementById("pageDisplayName").textContent = name;
             document.getElementById("pageUsername").textContent = "@" + (profile?.username || "user");
             document.getElementById("pageBio").textContent = profile?.bio || "";
             document.getElementById("pageColorAvatar").style.backgroundColor = profile?.profile_color || "#007AFF";
 
-            // 2. Count Real Creations (Videos posted by this user)
+            // 2. Count Real Creations & Load All Videos Posted by This Creator
             const { data: userVideos } = await supabaseClient
                 .from("videos")
                 .select("id, video_url, caption")
-                .eq("user_id", user.id)
+                .eq("user_id", targetUserId)
                 .order("created_at", { ascending: false });
 
             const videosList = userVideos || [];
             document.getElementById("creationCount").textContent = videosList.length;
 
-            // 3. Count Real Followers
-            const { count: followerTotal } = await supabaseClient
-                .from("follows")
-                .select("*", { count: "exact", head: true })
-                .eq("following_id", user.id);
+            // 3. Count Real Followers & Following
+            async function refreshFollowStats() {
+                const { count: followerTotal } = await supabaseClient
+                    .from("follows")
+                    .select("*", { count: "exact", head: true })
+                    .eq("following_id", targetUserId);
+                document.getElementById("followersCount").textContent = followerTotal || 0;
 
-            document.getElementById("followersCount").textContent = followerTotal || 0;
+                const { count: followingTotal } = await supabaseClient
+                    .from("follows")
+                    .select("*", { count: "exact", head: true })
+                    .eq("follower_id", targetUserId);
+                document.getElementById("followingCount").textContent = followingTotal || 0;
+            }
+            await refreshFollowStats();
 
-            // 4. Count Real Following
-            const { count: followingTotal } = await supabaseClient
-                .from("follows")
-                .select("*", { count: "exact", head: true })
-                .eq("follower_id", user.id);
+            // 4. Show Follow / Following Button when viewing ANOTHER creator's page
+            const followBtn = document.getElementById("followCreatorBtn");
+            if (loggedInUser && loggedInUser.id !== targetUserId && followBtn) {
+                followBtn.style.display = "inline-block";
 
-            document.getElementById("followingCount").textContent = followingTotal || 0;
+                const { data: existingFollow } = await supabaseClient
+                    .from("follows")
+                    .select("id")
+                    .eq("follower_id", loggedInUser.id)
+                    .eq("following_id", targetUserId)
+                    .maybeSingle();
 
-            // Show videos in grid & hide empty state once user posts
+                let isFollowing = !!existingFollow;
+                followBtn.textContent = isFollowing ? "Following" : "Follow";
+                followBtn.style.backgroundColor = isFollowing ? "rgba(255,255,255,0.16)" : "#007AFF";
+
+                followBtn.onclick = async () => {
+                    if (isFollowing) {
+                        await supabaseClient
+                            .from("follows")
+                            .delete()
+                            .eq("follower_id", loggedInUser.id)
+                            .eq("following_id", targetUserId);
+                        isFollowing = false;
+                    } else {
+                        await supabaseClient
+                            .from("follows")
+                            .insert({
+                                follower_id: loggedInUser.id,
+                                following_id: targetUserId
+                            });
+                        isFollowing = true;
+                    }
+                    followBtn.textContent = isFollowing ? "Following" : "Follow";
+                    followBtn.style.backgroundColor = isFollowing ? "rgba(255,255,255,0.16)" : "#007AFF";
+                    await refreshFollowStats();
+                };
+            }
+
+            // 5. Display Creator's Posted Videos Grid
             if (videosList.length > 0) {
                 document.getElementById("emptyState").style.display = "none";
                 const grid = document.getElementById("creationsGrid");
                 grid.style.display = "grid";
                 grid.innerHTML = videosList.map(v => `
                     <div class="creation-card">
-                        <video src="${v.video_url}" muted playsinline></video>
+                        <video src="${v.video_url}" muted playsinline controls></video>
                     </div>
                 `).join("");
             }
-        }
-
-        loadCreatorPage();
+        });
     </script>
 </body>
 </html>
