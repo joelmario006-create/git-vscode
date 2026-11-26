@@ -60,10 +60,13 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
         if (signedOutDropdown) signedOutDropdown.style.display = "none";
         if (signedInDropdown) signedInDropdown.style.display = "flex";
 
-        // Automatically open dropdown & show success message right after Google login
         if (sessionStorage.getItem("justSignedIn") === "true") {
-            if (profileDropdownPanel) profileDropdownPanel.style.display = "block";
-            if (authSuccessBanner) authSuccessBanner.style.display = "block";
+            if (videoStageAuthToast) {
+                videoStageAuthToast.style.display = "block";
+                setTimeout(() => {
+                    videoStageAuthToast.style.display = "none";
+                }, 4000);
+            }
             sessionStorage.removeItem("justSignedIn");
         }
 
