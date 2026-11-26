@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retu — Edit Profile</title>
+    <link rel="icon" type="image/jpeg" href="images/Retu logo.jpeg">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body {
+            background: radial-gradient(circle at top left, #07226b, #010818 65%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+        .profile-container { width: 100%; max-width: 480px; }
+        .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+        .back-btn { color: #ffffff; text-decoration: none; font-size: 24px; font-weight: bold; padding: 4px 10px; }
+        .page-title { font-size: 20px; font-weight: 700; }
+        .avatar-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 28px; }
+        .big-color-circle {
+            width: 110px; height: 110px; border-radius: 50%;
+            background-color: #007AFF;
+            box-shadow: 0 0 28px rgba(0, 122, 255, 0.55);
+            margin-bottom: 14px;
+            transition: background-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .hero-name { font-size: 22px; font-weight: 700; }
+        .field-card {
+            background: rgba(3, 21, 71, 0.75);
+            border: 1px solid #007AFF;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+        .field-label { font-size: 12px; color: #93c5fd; margin-bottom: 6px; display: block; }
+        .field-input {
+            width: 100%; background: transparent; border: none; color: #ffffff;
+            font-size: 16px; outline: none;
+        }
+        .color-dock {
+            background: rgba(3, 21, 71, 0.85);
+            border: 1px solid #007AFF;
+            border-radius: 18px;
+            padding: 18px;
+            text-align: center;
+            margin-top: 18px;
+            margin-bottom: 22px;
+        }
+        .color-dock-title { font-size: 15px; color: #e2e8f0; margin-bottom: 16px; }
+        .color-row { display: flex; justify-content: center; gap: 16px; }
+        .color-dot {
+            width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent;
+            cursor: pointer; transition: transform 0.15s ease;
+        }
+        .color-dot:hover, .color-dot.active { transform: scale(1.18); border-color: #ffffff; }
+        .save-btn {
+            width: 100%; background: #007AFF; color: #ffffff; border: none;
+            border-radius: 999px; padding: 14px; font-size: 16px; font-weight: 700;
+            cursor: pointer;
+        }
+        .status-msg { text-align: center; margin-top: 12px; font-size: 14px; color: #34d399; }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="top-bar">
+            <a href="feed.html" class="back-btn">&lt;</a>
+            <span class="page-title">Edit profile</span>
+            <span style="width: 32px;"></span>
+        </div>
+
+        <div class="avatar-section">
+            <div id="bigColorCircle" class="big-color-circle"></div>
+            <div id="heroDisplayName" class="hero-name">Loading...</div>
+        </div>
+
+        <div class="field-card">
+            <label class="field-label">Name</label>
+            <input type="text" id="displayNameInput" class="field-input" placeholder="Enter your display name">
+        </div>
+
+        <div class="field-card">
+            <label class="field-label">Username</label>
+            <input type="text" id="usernameInput" class="field-input" placeholder="Enter your username">
+        </div>
+
+        <div class="field-card">
+            <label class="field-label">Bio</label>
+            <input type="text" id="bioInput" class="field-input" placeholder="Feel free to use your words to the world">
+        </div>
+
+        <div class="color-dock">
+            <div class="color-dock-title">Change colour profile</div>
+            <div class="color-row">
+                <button type="button" class="color-dot" data-color="#00D084" style="background-color: #00D084;"></button>
+                <button type="button" class="color-dot" data-color="#FF3B30" style="background-color: #FF3B30;"></button>
+                <button type="button" class="color-dot" data-color="#007AFF" style="background-color: #007AFF;"></button>
+                <button type="button" class="color-dot" data-color="#E040FB" style="background-color: #E040FB;"></button>
+                <button type="button" class="color-dot" data-color="#FF9500" style="background-color: #FF9500;"></button>
+                <button type="button" class="color-dot" data-color="#7C4DFF" style="background-color: #7C4DFF;"></button>
+            </div>
+        </div>
+
+        <button id="saveProfileBtn" class="save-btn">Save Profile</button>
+        <div id="statusMsg" class="status-msg"></div>
+    </div>
+
+    <script src="https://jsdelivr.net"></script>
+    <script src="script.js"></script>
+    <script>
+        let selectedColor = "#007AFF";
+        let currentUserId = null;
+
+        const bigCircle = document.getElementById("bigColorCircle");
+        const heroName = document.getElementById("heroDisplayName");
+        const nameInput = document.getElementById("displayNameInput");
+        const usernameInput = document.getElementById("usernameInput");
+        const bioInput = document.getElementById("bioInput");
+        const statusMsg = document.getElementById("statusMsg");
+
+        function applyColor(color) {
+            selectedColor = color;
+            bigCircle.style.backgroundColor = color;
+            bigCircle.style.boxShadow = `0 0 28px ${color}88`;
+            document.querySelectorAll(".color-dot").forEach(dot => {
+                dot.classList.toggle("active", dot.dataset.color === color);
+            });
+        }
+
+        document.querySelectorAll(".color-dot").forEach(dot => {
+            dot.addEventListener("click", () => applyColor(dot.dataset.color));
+        });
+
+        async function loadProfilePage() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                window.location.href = "feed.html";
+                return;
+            }
+            currentUserId = user.id;
+
+            const { data: profile } = await supabaseClient
+                .from("profiles")
+                .select("*")
+                .eq("id", user.id)
+                .single();
+
+            if (profile) {
+                const name = profile.display_name || user.user_metadata.full_name || "User";
+                heroName.textContent = name;
+                nameInput.value = name;
+                usernameInput.value = profile.username || "";
+                bioInput.value = profile.bio || "";
+                applyColor(profile.profile_color || "#007AFF");
+            }
+        }
+
+        document.getElementById("saveProfileBtn").addEventListener("click", async () => {
+            if (!currentUserId) return;
+            statusMsg.textContent = "Saving...";
+
+            const { error } = await supabaseClient
+                .from("profiles")
+                .update({
+                    display_name: nameInput.value.trim(),
+                    username: usernameInput.value.trim(),
+                    bio: bioInput.value.trim(),
+                    profile_color: selectedColor
+                })
+                .eq("id", currentUserId);
+
+            if (error) {
+                statusMsg.style.color = "#f87171";
+                statusMsg.textContent = "Error: " + error.message;
+            } else {
+                heroName.textContent = nameInput.value.trim();
+                statusMsg.style.color = "#34d399";
+                statusMsg.textContent = "Profile saved!";
+            }
+        });
+
+        loadProfilePage();
+    </script>
+</body>
+</html>
