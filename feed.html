@@ -32,39 +32,51 @@
     <header class="right-top-bar"></header>
 
     
-    <!-- Top-Right Bar Above the White Line (Leaves space on the left for '+' later) -->
-    <header style="position: fixed; top: 0; left: calc(50% + 210px); right: 0; height: 60px; border-bottom: 1px solid #cbd5e1; z-index: 9999;">
-        <button id="topProfileBtn" title="Profile" style="position: absolute; left: 66px; top: 14px; width: 32px; height: 32px; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-            <svg id="topProfileSvg" width="30" height="30" viewBox="0 0 24 24" fill="none">
-                <circle id="topProfileRing" cx="12" cy="12" r="10" stroke="#0f172a" stroke-width="1.8"/>
-                <circle id="topProfileHead" cx="12" cy="9" r="3" stroke="#0f172a" stroke-width="1.8"/>
-                <path id="topProfileBody" d="M6.5 18.5C7.8 16.2 9.7 15 12 15C14.3 15 16.2 16.2 17.5 18.5" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- Dark-Navy Top-Right Bar with White Divider Line -->
+    <header style="position: fixed; top: 0; left: calc(50% + 210px); right: 0; height: 60px; background-color: #031547; border-bottom: 2px solid #ffffff; z-index: 9999;">
+        <!-- Crisp White Profile Icon sitting flush on top of the white line (leaves space on left for '+' later) -->
+        <button id="topProfileBtn" title="Profile" style="position: absolute; left: 66px; bottom: 2px; width: 38px; height: 38px; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+                <circle id="topProfileRing" cx="12" cy="12" r="10" stroke="#ffffff" stroke-width="1.8"/>
+                <circle id="topProfileHead" cx="12" cy="9" r="3" stroke="#ffffff" stroke-width="1.8"/>
+                <path id="topProfileBody" d="M6.5 18.5C7.8 16.2 9.7 15 12 15C14.3 15 16.2 16.2 17.5 18.5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
             </svg>
         </button>
     </header>
 
-    <!-- Right-Hand Panel Below the White Line -->
-    <aside style="position: fixed; top: 82px; left: calc(50% + 275px); z-index: 9999;">
-        <!-- Shown when SIGNED OUT -->
-        <button id="googleSignInBtn" style="display: flex; align-items: center; gap: 10px; background-color: #ffffff; color: #1f2937; border: 1px solid #e2e8f0; border-radius: 999px; padding: 10px 20px; font-family: Arial, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.12);">
-            <svg width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/>
-                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"/>
-                <path fill="#FBBC05" d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"/>
-                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/>
-            </svg>
-            <span>Sign in with Google</span>
-        </button>
+    <!-- Dropdown Panel Directly Below the White Line (top: 60px) -->
+    <aside id="profileDropdownPanel" style="display: none; position: fixed; top: 60px; left: calc(50% + 210px); right: 0; background-color: #031547; border-bottom: 1px solid #007AFF; padding: 20px 24px; color: #ffffff; font-family: Arial, sans-serif; z-index: 9998; box-shadow: 0 12px 28px rgba(0,0,0,0.45);">
+        
+        <!-- State A: Shown when SIGNED OUT -->
+        <div id="signedOutDropdown">
+            <p id="signInNotice" style="font-size: 14px; color: #93c5fd; margin-bottom: 14px; font-weight: 600;">
+                Sign in with Google to access your profile
+            </p>
+            <button id="googleSignInBtn" style="display: inline-flex; align-items: center; gap: 10px; background-color: #ffffff; color: #1f2937; border: none; border-radius: 999px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"/>
+                    <path fill="#FBBC05" d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/>
+                </svg>
+                <span>Sign in with Google</span>
+            </button>
+        </div>
 
-        <!-- Clean status message if user clicks Profile icon while signed out -->
-        <p id="signInNotice" style="display: none; margin-top: 10px; color: #dc2626; font-family: Arial, sans-serif; font-size: 13px; font-weight: 600;">
-            Please sign in with Google first.
-        </p>
-
-        <!-- Shown when SIGNED IN -->
-        <div id="userProfileCard" style="display: none; align-items: center; gap: 10px; background-color: #031547; color: #ffffff; border: 1px solid #007AFF; border-radius: 999px; padding: 8px 16px; font-family: Arial, sans-serif;">
-            <span id="userDisplayName" style="font-size: 14px; font-weight: 600;">Joel Mario</span>
-            <button id="signOutBtn" style="background: rgba(255,255,255,0.14); color: #ffffff; border: none; border-radius: 999px; padding: 5px 12px; font-size: 12px; cursor: pointer;">Sign Out</button>
+        <!-- State B: Shown when SIGNED IN -->
+        <div id="signedInDropdown" style="display: none; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <span id="dropdownColorCircle" style="width: 48px; height: 48px; border-radius: 50%; background-color: #007AFF; display: inline-block; flex-shrink: 0;"></span>
+                <div>
+                    <div id="dropdownDisplayName" style="font-size: 16px; font-weight: 700;">Joel Mario</div>
+                    <div id="dropdownUsername" style="font-size: 13px; color: #93c5fd;">@joel_mario</div>
+                </div>
+            </div>
+            <p id="dropdownBio" style="font-size: 13px; color: #cbd5e1; margin: 0;">No bio yet.</p>
+            <div style="display: flex; gap: 10px; margin-top: 4px;">
+                <a href="profile.html" style="background-color: #007AFF; color: #ffffff; text-decoration: none; border-radius: 999px; padding: 8px 18px; font-size: 13px; font-weight: 600;">Edit Profile</a>
+                <button id="signOutBtn" style="background: rgba(255,255,255,0.12); color: #ffffff; border: none; border-radius: 999px; padding: 8px 16px; font-size: 13px; cursor: pointer;">Sign Out</button>
+            </div>
         </div>
     </aside>
 

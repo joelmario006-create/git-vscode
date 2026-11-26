@@ -13,25 +13,22 @@ if (enterBtn) {
     });
 }
 
-const googleSignInBtn = document.getElementById("googleSignInBtn");
-const userProfileCard = document.getElementById("userProfileCard");
 const topProfileBtn = document.getElementById("topProfileBtn");
-const topProfileRing = document.getElementById("topProfileRing");
-const topProfileHead = document.getElementById("topProfileHead");
-const topProfileBody = document.getElementById("topProfileBody");
-const signInNotice = document.getElementById("signInNotice");
-const userDisplayName = document.getElementById("userDisplayName");
+const profileDropdownPanel = document.getElementById("profileDropdownPanel");
+const signedOutDropdown = document.getElementById("signedOutDropdown");
+const signedInDropdown = document.getElementById("signedInDropdown");
+const googleSignInBtn = document.getElementById("googleSignInBtn");
 const signOutBtn = document.getElementById("signOutBtn");
 
-let currentLoggedInUser = null;
+const dropdownColorCircle = document.getElementById("dropdownColorCircle");
+const dropdownDisplayName = document.getElementById("dropdownDisplayName");
+const dropdownUsername = document.getElementById("dropdownUsername");
+const dropdownBio = document.getElementById("dropdownBio");
 
-if (topProfileBtn) {
+if (topProfileBtn && profileDropdownPanel) {
     topProfileBtn.addEventListener("click", () => {
-        if (currentLoggedInUser) {
-            window.location.href = "profile.html";
-        } else if (signInNotice) {
-            signInNotice.style.display = "block";
-        }
+        const isOpen = profileDropdownPanel.style.display === "block";
+        profileDropdownPanel.style.display = isOpen ? "none" : "block";
     });
 }
 
@@ -55,12 +52,10 @@ if (signOutBtn) {
 
 supabaseClient.auth.onAuthStateChange(async (event, session) => {
     const user = session?.user;
-    currentLoggedInUser = user || null;
 
     if (user) {
-        if (googleSignInBtn) googleSignInBtn.style.display = "none";
-        if (signInNotice) signInNotice.style.display = "none";
-        if (userProfileCard) userProfileCard.style.display = "flex";
+        if (signedOutDropdown) signedOutDropdown.style.display = "none";
+        if (signedInDropdown) signedInDropdown.style.display = "flex";
 
         const fallbackName = user.user_metadata.full_name || user.email;
 
@@ -85,15 +80,12 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
         }
 
         const activeColor = profile?.profile_color || "#007AFF";
-        if (userDisplayName) userDisplayName.textContent = profile?.display_name || fallbackName;
-        if (topProfileRing) topProfileRing.setAttribute("stroke", activeColor);
-        if (topProfileHead) topProfileHead.setAttribute("stroke", activeColor);
-        if (topProfileBody) topProfileBody.setAttribute("stroke", activeColor);
+        if (dropdownColorCircle) dropdownColorCircle.style.backgroundColor = activeColor;
+        if (dropdownDisplayName) dropdownDisplayName.textContent = profile?.display_name || fallbackName;
+        if (dropdownUsername) dropdownUsername.textContent = "@" + (profile?.username || "user");
+        if (dropdownBio) dropdownBio.textContent = profile?.bio || "Feel free to use your words to the world";
     } else {
-        if (googleSignInBtn) googleSignInBtn.style.display = "flex";
-        if (userProfileCard) userProfileCard.style.display = "none";
-        if (topProfileRing) topProfileRing.setAttribute("stroke", "#0f172a");
-        if (topProfileHead) topProfileHead.setAttribute("stroke", "#0f172a");
-        if (topProfileBody) topProfileBody.setAttribute("stroke", "#0f172a");
+        if (signedOutDropdown) signedOutDropdown.style.display = "block";
+        if (signedInDropdown) signedInDropdown.style.display = "none";
     }
 });
