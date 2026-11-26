@@ -31,16 +31,16 @@
 
     <header class="right-top-bar"></header>
 
+    
     <!-- Top-Right Bar Above the White Line (Leaves space on the left for '+' later) -->
     <header style="position: fixed; top: 0; left: calc(50% + 210px); right: 0; height: 60px; border-bottom: 1px solid #cbd5e1; z-index: 9999;">
-        <a href="profile.html" id="topProfileIconLink" title="Profile" style="display: none; position: absolute; left: 66px; top: 14px; width: 32px; height: 32px; align-items: center; justify-content: center; text-decoration: none;">
-            <span id="topProfileColorDot" style="width: 30px; height: 30px; border-radius: 50%; background-color: #007AFF; border: 2px solid #0f172a; display: flex; align-items: center; justify-content: center;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="8.5" r="3.2" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M6.5 18.5C7.8 16.2 9.7 15 12 15C14.3 15 16.2 16.2 17.5 18.5" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </span>
-        </a>
+        <button id="topProfileBtn" title="Profile" style="position: absolute; left: 66px; top: 14px; width: 32px; height: 32px; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg id="topProfileSvg" width="30" height="30" viewBox="0 0 24 24" fill="none">
+                <circle id="topProfileRing" cx="12" cy="12" r="10" stroke="#0f172a" stroke-width="1.8"/>
+                <circle id="topProfileHead" cx="12" cy="9" r="3" stroke="#0f172a" stroke-width="1.8"/>
+                <path id="topProfileBody" d="M6.5 18.5C7.8 16.2 9.7 15 12 15C14.3 15 16.2 16.2 17.5 18.5" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+        </button>
     </header>
 
     <!-- Right-Hand Panel Below the White Line -->
@@ -56,9 +56,14 @@
             <span>Sign in with Google</span>
         </button>
 
+        <!-- Clean status message if user clicks Profile icon while signed out -->
+        <p id="signInNotice" style="display: none; margin-top: 10px; color: #dc2626; font-family: Arial, sans-serif; font-size: 13px; font-weight: 600;">
+            Please sign in with Google first.
+        </p>
+
         <!-- Shown when SIGNED IN -->
         <div id="userProfileCard" style="display: none; align-items: center; gap: 10px; background-color: #031547; color: #ffffff; border: 1px solid #007AFF; border-radius: 999px; padding: 8px 16px; font-family: Arial, sans-serif;">
-            <span id="userDisplayName" style="font-size: 14px; font-weight: 600;">Joel Wyatt</span>
+            <span id="userDisplayName" style="font-size: 14px; font-weight: 600;">Joel Mario</span>
             <button id="signOutBtn" style="background: rgba(255,255,255,0.14); color: #ffffff; border: none; border-radius: 999px; padding: 5px 12px; font-size: 12px; cursor: pointer;">Sign Out</button>
         </div>
     </aside>
