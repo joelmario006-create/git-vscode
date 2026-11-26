@@ -24,10 +24,8 @@
             width: 110px; height: 110px; border-radius: 50%;
             background-color: #007AFF;
             box-shadow: 0 0 28px rgba(0, 122, 255, 0.55);
-            margin-bottom: 14px;
             transition: background-color 0.25s ease, box-shadow 0.25s ease;
         }
-        .hero-name { font-size: 22px; font-weight: 700; }
         .field-card {
             background: rgba(3, 21, 71, 0.75);
             border: 1px solid #007AFF;
@@ -74,7 +72,6 @@
 
         <div class="avatar-section">
             <div id="bigColorCircle" class="big-color-circle"></div>
-            <div id="heroDisplayName" class="hero-name">Loading...</div>
         </div>
 
         <div class="field-card">
@@ -115,7 +112,6 @@
         let currentUserId = null;
 
         const bigCircle = document.getElementById("bigColorCircle");
-        const heroName = document.getElementById("heroDisplayName");
         const nameInput = document.getElementById("displayNameInput");
         const usernameInput = document.getElementById("usernameInput");
         const bioInput = document.getElementById("bioInput");
@@ -134,8 +130,8 @@
             dot.addEventListener("click", () => applyColor(dot.dataset.color));
         });
 
-        async function loadProfilePage() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
+        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+            const user = session?.user;
             if (!user) {
                 window.location.href = "feed.html";
                 return;
@@ -149,40 +145,40 @@
                 .single();
 
             if (profile) {
-                const name = profile.display_name || user.user_metadata.full_name || "User";
-                heroName.textContent = name;
-                nameInput.value = name;
+                nameInput.value = profile.display_name || user.user_metadata.full_name || "";
                 usernameInput.value = profile.username || "";
                 bioInput.value = profile.bio || "";
                 applyColor(profile.profile_color || "#007AFF");
             }
-        }
+        });
 
         document.getElementById("saveProfileBtn").addEventListener("click", async () => {
             if (!currentUserId) return;
             statusMsg.textContent = "Saving...";
 
+            const cleanUsername = usernameInput.value.trim().replace(/^@+/, "");
+
             const { error } = await supabaseClient
                 .from("profiles")
-                .update({
+                .upsert({
+                    id: currentUserId,
                     display_name: nameInput.value.trim(),
-                    username: usernameInput.value.trim(),
+                    username: cleanUsername,
                     bio: bioInput.value.trim(),
                     profile_color: selectedColor
-                })
-                .eq("id", currentUserId);
+                });
 
             if (error) {
                 statusMsg.style.color = "#f87171";
                 statusMsg.textContent = "Error: " + error.message;
             } else {
-                heroName.textContent = nameInput.value.trim();
                 statusMsg.style.color = "#34d399";
-                statusMsg.textContent = "Profile saved!";
+                statusMsg.textContent = "Profile saved! Opening your page...";
+                setTimeout(() => {
+                    window.location.href = "user-page.html";
+                }, 600);
             }
         });
-
-        loadProfilePage();
     </script>
 </body>
 </html>

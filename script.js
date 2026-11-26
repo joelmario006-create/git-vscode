@@ -17,6 +17,7 @@ const topProfileBtn = document.getElementById("topProfileBtn");
 const profileDropdownPanel = document.getElementById("profileDropdownPanel");
 const signedOutDropdown = document.getElementById("signedOutDropdown");
 const signedInDropdown = document.getElementById("signedInDropdown");
+const authSuccessBanner = document.getElementById("authSuccessBanner");
 const googleSignInBtn = document.getElementById("googleSignInBtn");
 const signOutBtn = document.getElementById("signOutBtn");
 
@@ -34,6 +35,7 @@ if (topProfileBtn && profileDropdownPanel) {
 
 if (googleSignInBtn) {
     googleSignInBtn.addEventListener("click", async () => {
+        sessionStorage.setItem("justSignedIn", "true");
         const { error } = await supabaseClient.auth.signInWithOAuth({
             provider: "google",
             options: {
@@ -46,6 +48,7 @@ if (googleSignInBtn) {
 
 if (signOutBtn) {
     signOutBtn.addEventListener("click", async () => {
+        sessionStorage.removeItem("justSignedIn");
         await supabaseClient.auth.signOut();
     });
 }
@@ -56,6 +59,13 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (user) {
         if (signedOutDropdown) signedOutDropdown.style.display = "none";
         if (signedInDropdown) signedInDropdown.style.display = "flex";
+
+        // Automatically open dropdown & show success message right after Google login
+        if (sessionStorage.getItem("justSignedIn") === "true") {
+            if (profileDropdownPanel) profileDropdownPanel.style.display = "block";
+            if (authSuccessBanner) authSuccessBanner.style.display = "block";
+            sessionStorage.removeItem("justSignedIn");
+        }
 
         const fallbackName = user.user_metadata.full_name || user.email;
 
@@ -87,5 +97,6 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
     } else {
         if (signedOutDropdown) signedOutDropdown.style.display = "block";
         if (signedInDropdown) signedInDropdown.style.display = "none";
+        if (authSuccessBanner) authSuccessBanner.style.display = "none";
     }
 });
