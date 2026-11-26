@@ -164,7 +164,8 @@
     <script src="script.js"></script>
     <script>
         async function loadCreatorPage() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
+           const { data: { session } } = await supabaseClient.auth.getSession();
+const user = session?.user;
             if (!user) {
                 window.location.href = "feed.html";
                 return;

@@ -130,7 +130,8 @@
             dot.addEventListener("click", () => applyColor(dot.dataset.color));
         });
 
-        supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        async function initProfileEditor() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
             const user = session?.user;
             if (!user) {
                 window.location.href = "feed.html";
@@ -142,43 +143,59 @@
                 .from("profiles")
                 .select("*")
                 .eq("id", user.id)
-                .single();
+                .maybeSingle();
 
             if (profile) {
                 nameInput.value = profile.display_name || user.user_metadata.full_name || "";
                 usernameInput.value = profile.username || "";
                 bioInput.value = profile.bio || "";
                 applyColor(profile.profile_color || "#007AFF");
+            } else {
+                nameInput.value = user.user_metadata.full_name || "";
             }
-        });
+        }
 
         document.getElementById("saveProfileBtn").addEventListener("click", async () => {
-            if (!currentUserId) return;
+            if (!currentUserId) {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                currentUserId = session?.user?.id;
+            }
+            if (!currentUserId) {
+                statusMsg.style.color = "#f87171";
+                statusMsg.textContent = "Not signed in — returning to feed...";
+                return;
+            }
+
+            statusMsg.style.color = "#93c5fd";
             statusMsg.textContent = "Saving...";
 
-            const cleanUsername = usernameInput.value.trim().replace(/^@+/, "");
+            const cleanName = nameInput.value.trim();
+            const cleanUsername = usernameInput.value.trim().replace(/^@+/, "") || ("user_" + currentUserId.slice(0, 6));
+            const cleanBio = bioInput.value.trim();
 
             const { error } = await supabaseClient
                 .from("profiles")
                 .upsert({
                     id: currentUserId,
-                    display_name: nameInput.value.trim(),
+                    display_name: cleanName,
                     username: cleanUsername,
-                    bio: bioInput.value.trim(),
+                    bio: cleanBio,
                     profile_color: selectedColor
-                });
+                }, { onConflict: "id" });
 
             if (error) {
                 statusMsg.style.color = "#f87171";
-                statusMsg.textContent = "Error: " + error.message;
+                statusMsg.textContent = "Save failed: " + error.message;
             } else {
                 statusMsg.style.color = "#34d399";
                 statusMsg.textContent = "Profile saved! Opening your page...";
                 setTimeout(() => {
                     window.location.href = "user-page.html";
-                }, 600);
+                }, 500);
             }
         });
+
+        initProfileEditor();
     </script>
 </body>
 </html>
