@@ -53,10 +53,11 @@ if (signOutBtn) {
     });
 }
 
-supabaseClient.auth.onAuthStateChange(async (event, session) => {
-    const user = session?.user;
+if (supabaseClient) {
+    supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        const user = session?.user;
 
-    if (user) {
+        if (user) {
         if (signedOutDropdown) signedOutDropdown.style.display = "none";
         if (signedInDropdown) signedInDropdown.style.display = "flex";
 
@@ -67,7 +68,7 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
             sessionStorage.removeItem("justSignedIn");
         }
 
-        const fallbackName = user.user_metadata.full_name || user.email;
+        const fallbackName = user.user_metadata?.full_name || user.email || "User";
 
         let { data: profile } = await supabaseClient
             .from("profiles")
@@ -94,10 +95,11 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
         if (dropdownDisplayName) dropdownDisplayName.textContent = profile?.display_name || fallbackName;
         if (dropdownUsername) dropdownUsername.textContent = "@" + (profile?.username || "user");
         if (dropdownBio) dropdownBio.textContent = profile?.bio || "Feel free to use your words to the world";
-    } else {
+        } else {
         if (signedOutDropdown) signedOutDropdown.style.display = "block";
         if (signedInDropdown) signedInDropdown.style.display = "none";
         if (authSuccessBanner) authSuccessBanner.style.display = "none";
-    }
-});
+        }
+    });
+}
 
