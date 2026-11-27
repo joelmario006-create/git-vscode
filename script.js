@@ -1,6 +1,7 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const supabaseUrl = "https://hicgwvonnshnfwawezrm.supabase.co";
 const supabaseKey = "sb_publishable_kDRfhKyh8MLZhw-lVB6Szw_jHmh_gGm";
-const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
+const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
 // 1. Enter Platform button (index.html)
 const enterBtn = document.getElementById("myButton");
