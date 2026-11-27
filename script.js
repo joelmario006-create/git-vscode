@@ -100,3 +100,5 @@ if (supabaseClient) {
         }
     });
 }
+
+export { supabaseClient };

@@ -163,8 +163,7 @@
         <div id="creationsGrid" class="creations-grid"></div>
     </div>
 
-    <script src="https://jsdelivr.net"></script>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
     <script>
         supabaseClient.auth.onAuthStateChange(async (event, session) => {
             const loggedInUser = session?.user || null;
