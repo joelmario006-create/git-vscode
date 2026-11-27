@@ -44,6 +44,23 @@
         </button>
     </header>
 
+    <!-- '+' Create Post Icon (Left slot, right beside Profile icon) -->
+        <button id="topCreateBtn" onclick="const u = document.getElementById('uploadDrawerPanel'); u.style.display = u.style.display === 'block' ? 'none' : 'block';" title="Create Post" style="position: absolute; left: 18px; bottom: 2px; width: 38px; height: 38px; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="18" height="18" rx="5" stroke="#ffffff" stroke-width="1.8"/>
+                <path d="M12 8V16M8 12H16" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+
+        <!-- Upload Video Drawer Directly Below the White Line -->
+    <aside id="uploadDrawerPanel" style="display: none; position: fixed; top: 60px; left: calc(50% + 210px); right: 0; background-color: #031547; border-bottom: 1px solid #007AFF; padding: 20px 24px; color: #ffffff; font-family: Arial, sans-serif; z-index: 99998; box-shadow: 0 12px 28px rgba(0,0,0,0.45);">
+        <div style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">Create Post</div>
+        <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/*" style="width: 100%; margin-bottom: 12px; color: #cbd5e1; font-size: 13px;">
+        <input type="text" id="videoCaptionInput" placeholder="Write a caption..." style="width: 100%; background: rgba(255,255,255,0.08); border: 1px solid #007AFF; border-radius: 10px; padding: 10px 12px; color: #ffffff; font-size: 14px; margin-bottom: 12px; outline: none;">
+        <button id="publishVideoBtn" style="width: 100%; background-color: #007AFF; color: #ffffff; border: none; border-radius: 999px; padding: 10px; font-size: 14px; font-weight: 700; cursor: pointer;">Post Video</button>
+        <p id="uploadStatusMsg" style="margin-top: 10px; font-size: 13px; color: #34d399;"></p>
+    </aside>
+
     <!-- Dropdown Panel Directly Below the White Line (top: 60px) -->
     <aside id="profileDropdownPanel" style="display: none; position: fixed; top: 60px; left: calc(50% + 210px); right: 0; background-color: #031547; border-bottom: 1px solid #007AFF; padding: 20px 24px; color: #ffffff; font-family: Arial, sans-serif; z-index: 9998; box-shadow: 0 12px 28px rgba(0,0,0,0.45);">
         
@@ -95,8 +112,8 @@
         
 
 <script src="https://jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
             <script src="script.js"></script>
+            <script src="post.js"></script>
 
      
 </body>
