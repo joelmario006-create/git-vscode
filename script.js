@@ -23,10 +23,15 @@ const dropdownDisplayName = document.getElementById("dropdownDisplayName");
 const dropdownUsername = document.getElementById("dropdownUsername");
 const dropdownBio = document.getElementById("dropdownBio");
 
-if (googleSignInBtn && supabaseClient) {
+if (googleSignInBtn) {
     googleSignInBtn.addEventListener("click", async () => {
+        const client = supabaseClient || (window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null);
+        if (!client) {
+            alert("Still connecting to Supabase — check your internet connection or refresh the page.");
+            return;
+        }
         sessionStorage.setItem("justSignedIn", "true");
-        const { error } = await supabaseClient.auth.signInWithOAuth({
+        const { error } = await client.auth.signInWithOAuth({
             provider: "google",
             options: {
                 redirectTo: window.location.origin + "/git-vscode/feed.html"
