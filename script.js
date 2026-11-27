@@ -100,3 +100,4 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
         if (authSuccessBanner) authSuccessBanner.style.display = "none";
     }
 });
+
