@@ -105,8 +105,9 @@
         <div id="statusMsg" class="status-msg"></div>
     </div>
 
-    <script type="module" src="script.js"></script>
-    <script>
+    <script type="module">
+        import { supabaseClient } from "./script.js";
+
         let selectedColor = "#007AFF";
         let currentUserId = null;
 
@@ -129,7 +130,7 @@
             dot.addEventListener("click", () => applyColor(dot.dataset.color));
         });
 
-        async function initProfileEditor() {
+        async function loadEditor() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             const user = session?.user;
             if (!user) {
@@ -149,52 +150,39 @@
                 usernameInput.value = profile.username || "";
                 bioInput.value = profile.bio || "";
                 applyColor(profile.profile_color || "#007AFF");
-            } else {
-                nameInput.value = user.user_metadata.full_name || "";
             }
         }
 
         document.getElementById("saveProfileBtn").addEventListener("click", async () => {
-            if (!currentUserId) {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                currentUserId = session?.user?.id;
-            }
-            if (!currentUserId) {
-                statusMsg.style.color = "#f87171";
-                statusMsg.textContent = "Not signed in — returning to feed...";
-                return;
-            }
-
+            if (!currentUserId) return;
             statusMsg.style.color = "#93c5fd";
             statusMsg.textContent = "Saving...";
 
-            const cleanName = nameInput.value.trim();
             const cleanUsername = usernameInput.value.trim().replace(/^@+/, "") || ("user_" + currentUserId.slice(0, 6));
-            const cleanBio = bioInput.value.trim();
 
             const { error } = await supabaseClient
                 .from("profiles")
-                .upsert({
-                    id: currentUserId,
-                    display_name: cleanName,
+                .update({
+                    display_name: nameInput.value.trim(),
                     username: cleanUsername,
-                    bio: cleanBio,
+                    bio: bioInput.value.trim(),
                     profile_color: selectedColor
-                }, { onConflict: "id" });
+                })
+                .eq("id", currentUserId);
 
             if (error) {
                 statusMsg.style.color = "#f87171";
-                statusMsg.textContent = "Save failed: " + error.message;
+                statusMsg.textContent = "Error: " + error.message;
             } else {
                 statusMsg.style.color = "#34d399";
-                statusMsg.textContent = "Profile saved! Opening your page...";
+                statusMsg.textContent = "Profile saved!";
                 setTimeout(() => {
                     window.location.href = "user-page.html";
-                }, 500);
+                }, 400);
             }
         });
 
-        initProfileEditor();
+        loadEditor();
     </script>
 </body>
 </html>
